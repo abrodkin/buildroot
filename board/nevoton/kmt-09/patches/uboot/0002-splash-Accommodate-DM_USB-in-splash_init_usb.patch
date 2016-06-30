@@ -1,0 +1,41 @@
+From 6ed60a438475d1535bc988c0db3a1c74dc3b6a11 Mon Sep 17 00:00:00 2001
+From: Alexey Brodkin <abrodkin@synopsys.com>
+Date: Fri, 1 Jul 2016 21:45:55 +0300
+Subject: [PATCH 2/4] splash: Accommodate DM_USB in splash_init_usb()
+
+Current implementation of splash_init_usb() requires usb_stor_scan()
+which doesn't exist in case of DM_USB simply because real probing
+happens right in usb_init().
+
+So disable usage of usb_stor_scan() in case of DM_USB.
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Nikita Kiryanov <nikita@compulab.co.il>
+Cc: Simon Glass <sjg@chromium.org>
+Cc: Jeroen Hofstee <jeroen@myspectrum.nl>
+Cc: Anatolij Gustschin <agust@denx.de>
+Cc: Robert Winkler <robert.winkler@boundarydevices.com>
+---
+ common/splash_source.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/common/splash_source.c b/common/splash_source.c
+index a09dd4b..65e209d 100644
+--- a/common/splash_source.c
++++ b/common/splash_source.c
+@@ -140,7 +140,11 @@ static int splash_init_usb(void)
+ 	if (err)
+ 		return err;
+ 
+-	return usb_stor_scan(1) < 0 ? -ENODEV : 0;
++#ifndef CONFIG_DM_USB
++	err = usb_stor_scan(1) < 0 ? -ENODEV : 0;
++#endif
++
++	return err;
+ }
+ #else
+ static inline int splash_init_usb(void)
+-- 
+2.5.5
+

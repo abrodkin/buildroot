@@ -9,3 +9,6 @@ BOOT_CMD_H=$BINARIES_DIR/boot.scr
 
 # U-Boot script
 $MKIMAGE -C none -A arm -T script -d $BOOT_CMD $BOOT_CMD_H
+
+# Copy over splash.bmp
+cp board/nevoton/kmt-09/splash.bmp $BINARIES_DIR

@@ -1,0 +1,26 @@
+From e6a917982f10df9eb05526969e4cbd68239b26d8 Mon Sep 17 00:00:00 2001
+From: Alexey Brodkin <abrodkin@synopsys.com>
+Date: Thu, 30 Jun 2016 13:45:30 +0300
+Subject: [PATCH 3/4] kmt-09-cb2: Add support for g070vw01_v0 LVDS LCD
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+---
+ configs/Cubieboard2_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/configs/Cubieboard2_defconfig b/configs/Cubieboard2_defconfig
+index 683f7f9..ff6d44d 100644
+--- a/configs/Cubieboard2_defconfig
++++ b/configs/Cubieboard2_defconfig
+@@ -3,6 +3,8 @@ CONFIG_ARCH_SUNXI=y
+ CONFIG_MACH_SUN7I=y
+ CONFIG_DRAM_CLK=480
+ CONFIG_MMC0_CD_PIN="PH1"
++CONFIG_VIDEO_LCD_MODE="x:800,y:480,depth:18,pclk_khz:33000,le:16,ri:209,up:22,lo:22,hs:30,vs:1,sync:3,vmode:0"
++CONFIG_VIDEO_LCD_PANEL_LVDS=y
+ CONFIG_DEFAULT_DEVICE_TREE="sun7i-a20-cubieboard2"
+ # CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
+ CONFIG_SPL=y
+-- 
+2.5.5
+

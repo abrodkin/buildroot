@@ -1,0 +1,34 @@
+From 00c721d1f1285d97e47c0a818804ddce12b49daa Mon Sep 17 00:00:00 2001
+From: Alexey Brodkin <abrodkin@synopsys.com>
+Date: Thu, 30 Jun 2016 15:34:16 +0300
+Subject: [PATCH 1/2] kmt-09: Update sunxi_defconfig
+
+ * Enable SysV IPC (required by Qt4)
+ * Disable console on framebuffer
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+---
+ arch/arm/configs/sunxi_defconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index b503a89..2398f78 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -1,3 +1,4 @@
++CONFIG_SYSVIPC=y
+ CONFIG_FHANDLE=y
+ CONFIG_NO_HZ=y
+ CONFIG_HIGH_RES_TIMERS=y
+@@ -96,8 +97,6 @@ CONFIG_REGULATOR_AXP20X=y
+ CONFIG_REGULATOR_GPIO=y
+ CONFIG_FB=y
+ CONFIG_FB_SIMPLE=y
+-CONFIG_FRAMEBUFFER_CONSOLE=y
+-CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
+ CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_HCD_PLATFORM=y
+-- 
+2.5.5
+
