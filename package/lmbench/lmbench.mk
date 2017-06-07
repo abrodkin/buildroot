@@ -4,9 +4,16 @@
 #
 ################################################################################
 
+ifeq ($(BR2_arc),y)
+LMBENCH_VERSION = master
+LMBENCH_SOURCE = lmbench-$(LMBENCH_VERSION).tar.gz
+LMBENCH_SITE = $(call github,foss-for-synopsys-dwc-arc-processors,lmbench,$(LMBENCH_VERSION))
+else
 LMBENCH_VERSION = 3.0-a9
 LMBENCH_SOURCE = lmbench-$(LMBENCH_VERSION).tgz
 LMBENCH_SITE = http://downloads.sourceforge.net/project/lmbench/development/lmbench-$(LMBENCH_VERSION)
+endif
+
 LMBENCH_LICENSE = lmbench license (based on GPLv2)
 LMBENCH_LICENSE_FILES = COPYING COPYING-2
 
@@ -35,7 +42,8 @@ define LMBENCH_BUILD_CMDS
 endef
 
 define LMBENCH_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) CFLAGS="$(TARGET_CFLAGS)" OS=$(ARCH) CC="$(TARGET_CC)" BASE=$(TARGET_DIR)/usr -C $(@D)/src install
+ 	mkdir -p $(TARGET_DIR)/root
+ 	cp -rdpf $(@D) $(TARGET_DIR)/root
 endef
 
 $(eval $(generic-package))
