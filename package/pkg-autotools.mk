@@ -31,7 +31,7 @@
 define CONFIG_UPDATE
 	for file in config.guess config.sub; do \
 		for i in $$(find $(1) -name $$file); do \
-			cp support/gnuconfig/$$file $$i; \
+			cp --remove-destination support/gnuconfig/$$file $$i; \
 		done; \
 	done
 endef
