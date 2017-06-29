@@ -1,0 +1,61 @@
+From 2d1db2b8e4a239889d3f4a534a4cd1785bdc98d2 Mon Sep 17 00:00:00 2001
+From: Waldemar Brodkorb <wbx@openadk.org>
+Date: Tue, 21 Mar 2017 20:04:21 +0100
+Subject: [PATCH] ARC: remove special CFLAGS/LDFLAGS handling
+
+Either toolchain defaults or buildsystems should provide the
+architecture specific CFLAGS and LDFLAGS.
+---
+ Rules.mak                |  6 ------
+ extra/Configs/Config.arc | 18 ------------------
+ 2 files changed, 24 deletions(-)
+
+diff --git a/Rules.mak b/Rules.mak
+index 9631b038fe27..63333845c4cf 100644
+--- a/Rules.mak
++++ b/Rules.mak
+@@ -502,12 +502,6 @@ ifeq ($(TARGET_ARCH),c6x)
+ 	CPU_LDFLAGS-y += $(CPU_CFLAGS)
+ endif
+ 
+-ifeq ($(TARGET_ARCH),arc)
+-	CPU_CFLAGS-$(CONFIG_ARC_CPU_700) += -mA7
+-	CPU_CFLAGS-$(CONFIG_ARC_CPU_HS) += -mcpu=archs
+-	CPU_LDFLAGS-y += $(CPU_CFLAGS) -marclinux
+-endif
+-
+ $(eval $(call check-gcc-var,$(PIEFLAG_NAME)))
+ PIEFLAG := $(CFLAG_$(PIEFLAG_NAME))
+ ifeq ($(PIEFLAG),)
+diff --git a/extra/Configs/Config.arc b/extra/Configs/Config.arc
+index 0c0bc71ce2fc..b176533e5cac 100644
+--- a/extra/Configs/Config.arc
++++ b/extra/Configs/Config.arc
+@@ -11,24 +11,6 @@ config FORCE_OPTIONS_FOR_ARCH
+ 	select ARCH_ANY_ENDIAN
+ 
+ choice
+-	prompt "Target Processor Type"
+-	default CONFIG_ARC_CPU_700
+-
+-config CONFIG_ARC_CPU_700
+-	bool "ARC700"
+-	select ARCH_HAS_MMU
+-	help
+-	  ARCompact ISA based ARC CPU
+-
+-config CONFIG_ARC_CPU_HS
+-	bool "ARC-HS"
+-	select ARCH_HAS_MMU
+-	help
+-	  Next Generation ARCv2 ISA based Processors
+-
+-endchoice
+-
+-choice
+ 	prompt "MMU Page Size"
+ 	default CONFIG_ARC_PAGE_SIZE_8K
+ 
+-- 
+2.7.5
+
