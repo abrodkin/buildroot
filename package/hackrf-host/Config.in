@@ -1,0 +1,18 @@
+config BR2_PACKAGE_HACKRF_HOST
+	bool "hackrf-host"
+	select BR2_PACKAGE_LIBUSB
+	depends on !BR2_STATIC_LIBS
+	depends on BR2_INSTALL_LIBSTDCPP
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	depends on BR2_PACKAGE_FFTW_PRECISION_SINGLE
+	help
+	  Library and tools for accessing HackRF SDR boards.
+
+	  https://github.com/mossmann/hackrf/tree/master/host
+
+comment "hackrf-host needs a toolchain w/ C++, threads, dynamic library and fftw3f"
+	depends on BR2_STATIC_LIBS
+	depends on !BR2_INSTALL_LIBSTDCPP
+	depends on !BR2_TOOLCHAIN_HAS_THREADS
+	depends on !BR2_PACKAGE_FFTW_PRECISION_SINGLE
+
