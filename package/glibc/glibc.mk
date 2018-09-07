@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ifeq ($(BR2_arc),y)
+ifeq ($(BR2_arc)$(BR2_arm),y)
 GLIBC_VERSION =  arc-2018.09-eng002
 GLIBC_SITE = $(call github,foss-for-synopsys-dwc-arc-processors,glibc,$(GLIBC_VERSION))
 else

@@ -5,7 +5,7 @@ choice
 	default BR2_BINUTILS_VERSION_2_28_X if BR2_ARM_INSTRUCTIONS_THUMB
 	default BR2_BINUTILS_VERSION_2_28_X if BR2_ARM_INSTRUCTIONS_THUMB2
 	default BR2_BINUTILS_VERSION_2_29_X if !BR2_arc
-	default BR2_BINUTILS_VERSION_ARC if BR2_arc
+	default BR2_BINUTILS_VERSION_ARC
 	help
 	  Select the version of binutils you wish to use.
 
@@ -24,7 +24,6 @@ config BR2_BINUTILS_VERSION_2_31_X
 
 config BR2_BINUTILS_VERSION_ARC
 	bool "binutils arc (2.29)"
-	depends on BR2_arc
 endchoice
 
 config BR2_BINUTILS_VERSION

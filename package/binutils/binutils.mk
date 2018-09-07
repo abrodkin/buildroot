@@ -8,7 +8,7 @@
 # If not, we do like other packages
 BINUTILS_VERSION = $(call qstrip,$(BR2_BINUTILS_VERSION))
 ifeq ($(BINUTILS_VERSION),)
-ifeq ($(BR2_arc),y)
+ifeq ($(BR2_arc)$(BR2_arm),y)
 BINUTILS_VERSION = arc-2018.09-eng002
 else
 BINUTILS_VERSION = 2.29.1
