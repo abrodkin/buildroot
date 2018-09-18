@@ -104,7 +104,7 @@ TARGET_ABI += -mlongcalls -mauto-litpools
 endif
 
 ifeq ($(BR2_arc)$(BR2_ARC_ATOMIC_EXT),yy)
-TARGET_ABI += -matomic
+TARGET_ABI += -matomic -mno-millicode -mlong-calls
 endif
 
 STAGING_SUBDIR = $(GNU_TARGET_NAME)/sysroot
