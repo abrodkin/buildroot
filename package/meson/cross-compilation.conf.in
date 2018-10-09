@@ -6,7 +6,7 @@
 [binaries]
 c = '@TARGET_CROSS@gcc'
 cpp = '@TARGET_CROSS@g++'
-ar = '@TARGET_CROSS@ar'
+ar = '@TARGET_CROSS@gcc-ar'
 strip = '@TARGET_CROSS@strip'
 pkgconfig = '@HOST_DIR@/usr/bin/pkg-config'
 
