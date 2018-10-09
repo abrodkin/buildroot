@@ -38,7 +38,8 @@ SYSTEMD_CONF_OPTS += \
 	-Dsulogin-path=/usr/sbin/sulogin \
 	-Dmount-path=/usr/bin/mount \
 	-Dumount-path=/usr/bin/umount \
-	-Dnobody-group=nogroup
+	-Dnobody-group=nogroup \
+	-Db_lto=true
 
 # disable unsupported features for non-glibc toolchains
 ifeq ($(BR2_TOOLCHAIN_USES_GLIBC),y)
