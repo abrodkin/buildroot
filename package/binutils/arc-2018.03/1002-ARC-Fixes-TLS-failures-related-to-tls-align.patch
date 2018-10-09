@@ -1,0 +1,80 @@
+From 427e9be88fd6f47499fbaa91a806b1a36a95b939 Mon Sep 17 00:00:00 2001
+From: Cupertino Miranda <cmiranda@synopsys.com>
+Date: Wed, 1 Aug 2018 17:22:07 +0100
+Subject: [PATCH 2/4] [ARC] Fixes TLS failures related to tls-align.
+
+This patch fixes glibc testcase in nptl/tls-align.
+
+bfd/
+2018-08-01  Cupertino Miranda <cmiranda@synopsys.com>
+
+	* arc-got.h (relocate_fix_got_relocs_for_got_info): Changed, fixed
+	    TCB_SIZE offsize to include section alignment.
+	* elf32-arc.c (arc_special_overflow_checks): Likewise.
+
+include/
+2018-08-01  Cupertino Miranda <cmiranda@synopsys.com>
+
+	* arc-reloc.def (ARC_TLS_LE_32): Updated reloc formula.
+---
+ bfd/arc-got.h             | 8 +++++++-
+ bfd/elf32-arc.c           | 3 ++-
+ include/elf/arc-reloc.def | 2 +-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/bfd/arc-got.h b/bfd/arc-got.h
+index dedd0e99b057..331e6ec3495d 100644
+--- a/bfd/arc-got.h
++++ b/bfd/arc-got.h
+@@ -24,6 +24,9 @@
+ 
+ #define TCB_SIZE (8)
+ 
++#define	align_power(addr, align)	\
++  (((addr) + ((bfd_vma) 1 << (align)) - 1) & (-((bfd_vma) 1 << (align))))
++
+ enum tls_type_e
+ {
+   GOT_UNKNOWN = 0,
+@@ -359,7 +362,10 @@ relocate_fix_got_relocs_for_got_info (struct got_entry **          list_p,
+ 
+ 		bfd_put_32 (output_bfd,
+ 			    sym_value - sec_vma
+-			    + (elf_hash_table (info)->dynamic_sections_created ? 0 : TCB_SIZE),
++			    + (elf_hash_table (info)->dynamic_sections_created
++			       ? 0
++			       : (align_power (TCB_SIZE,
++					       tls_sec->alignment_power))),
+ 			    htab->sgot->contents + entry->offset
+ 			    + (entry->existing_entries == TLS_GOT_MOD_AND_OFF
+ 			       ? 4 : 0));
+diff --git a/bfd/elf32-arc.c b/bfd/elf32-arc.c
+index 11aba9f121ef..c602e796ac1d 100644
+--- a/bfd/elf32-arc.c
++++ b/bfd/elf32-arc.c
+@@ -1197,7 +1197,8 @@ arc_special_overflow_checks (const struct arc_relocation_data reloc_data,
+ #define _SDA_BASE_ (bfd_signed_vma) (reloc_data.sdata_begin_symbol_vma)
+ #define TLS_REL (bfd_signed_vma) \
+   ((elf_hash_table (info))->tls_sec->output_section->vma)
+-#define TLS_TBSS (8)
++#define TLS_TBSS (align_power(TCB_SIZE, \
++		  reloc_data.sym_section->alignment_power))
+ 
+ #define none (0)
+ 
+diff --git a/include/elf/arc-reloc.def b/include/elf/arc-reloc.def
+index c58ca96a8f2c..72020724101d 100644
+--- a/include/elf/arc-reloc.def
++++ b/include/elf/arc-reloc.def
+@@ -489,7 +489,7 @@ ARC_RELOC_HOWTO(ARC_TLS_LE_32, 75, \
+                 32, \
+                 replace_word32, \
+                 dont, \
+-                ( ME ( ( ( ( S + A ) + TCB_SIZE ) - TLS_REL ) ) ))
++		( ME ( ( ( ( S + A ) + TLS_TBSS ) - TLS_REL ) ) ))
+ 
+ ARC_RELOC_HOWTO(ARC_S25W_PCREL_PLT, 76, \
+                 2, \
+-- 
+2.17.1
+

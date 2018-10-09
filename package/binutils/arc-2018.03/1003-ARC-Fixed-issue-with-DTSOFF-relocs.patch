@@ -1,0 +1,85 @@
+From 8e9b7ef4248af830528918ef714203abae09c329 Mon Sep 17 00:00:00 2001
+From: Cupertino Miranda <cmiranda@synopsys.com>
+Date: Thu, 6 Sep 2018 00:50:35 +0100
+Subject: [PATCH 3/4] [ARC] Fixed issue with DTSOFF relocs.
+
+Inserted offset in final section in the GOT entry of type DTSOFF soon to be
+relocated by the dynamic loader.
+
+bfd/
+2018-09-06  Cupertino Miranda <cmiranda@synopsys.com>
+
+	* arc-got.h (relocate_fix_got_relocs_for_got_info): Changed. Take TLS
+	    section alignment in consideration for this relocation.
+	* elf32-arc.c (FINAL_SECTSTART): Added this formula macro.
+	  (ARC_TLS_DTPOFF) Updated reloc to use new created macro instead.
+---
+ bfd/arc-got.h             | 10 +++++++---
+ bfd/elf32-arc.c           |  2 ++
+ include/elf/arc-reloc.def |  2 +-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/bfd/arc-got.h b/bfd/arc-got.h
+index 331e6ec3495d..10acdf8f4c37 100644
+--- a/bfd/arc-got.h
++++ b/bfd/arc-got.h
+@@ -335,7 +335,11 @@ relocate_fix_got_relocs_for_got_info (struct got_entry **          list_p,
+ 		bfd_vma sec_vma = tls_sec->output_section->vma;
+ 
+ 		bfd_put_32 (output_bfd,
+-			    sym_value - sec_vma,
++			    sym_value - sec_vma
++			    + (elf_hash_table (info)->dynamic_sections_created
++			       ? 0
++			       : (align_power (TCB_SIZE,
++					       tls_sec->alignment_power))),
+ 			    htab->sgot->contents + entry->offset
+ 			    + (entry->existing_entries == TLS_GOT_MOD_AND_OFF
+ 			       ? 4 : 0));
+@@ -346,7 +350,7 @@ relocate_fix_got_relocs_for_got_info (struct got_entry **          list_p,
+ 			    "GOT_TLS_IE"),
+ 			   (long) (sym_value - sec_vma),
+ 			   (long) (htab->sgot->output_section->vma
+-			      + htab->sgot->output_offset->vma
++			      + htab->sgot->output_offset
+ 			      + entry->offset
+ 			      + (entry->existing_entries == TLS_GOT_MOD_AND_OFF
+ 				 ? 4 : 0)),
+@@ -376,7 +380,7 @@ relocate_fix_got_relocs_for_got_info (struct got_entry **          list_p,
+ 			    "GOT_TLS_IE"),
+ 			   (long) (sym_value - sec_vma),
+ 			   (long) (htab->sgot->output_section->vma
+-			      + htab->sgot->output_offset->vma
++			      + htab->sgot->output_offset
+ 			      + entry->offset
+ 			      + (entry->existing_entries == TLS_GOT_MOD_AND_OFF
+ 				 ? 4 : 0)),
+diff --git a/bfd/elf32-arc.c b/bfd/elf32-arc.c
+index c602e796ac1d..167f2d23a938 100644
+--- a/bfd/elf32-arc.c
++++ b/bfd/elf32-arc.c
+@@ -1193,6 +1193,8 @@ arc_special_overflow_checks (const struct arc_relocation_data reloc_data,
+ 	     + (reloc_data.reloc_offset))))
+ #define SECTSTART (bfd_signed_vma) (reloc_data.sym_section->output_section->vma \
+ 				    + reloc_data.sym_section->output_offset)
++#define FINAL_SECTSTART \
++  (bfd_signed_vma) (reloc_data.sym_section->output_section->vma)
+ #define JLI (bfd_signed_vma) (reloc_data.sym_section->output_section->vma)
+ #define _SDA_BASE_ (bfd_signed_vma) (reloc_data.sdata_begin_symbol_vma)
+ #define TLS_REL (bfd_signed_vma) \
+diff --git a/include/elf/arc-reloc.def b/include/elf/arc-reloc.def
+index 72020724101d..d8576152f489 100644
+--- a/include/elf/arc-reloc.def
++++ b/include/elf/arc-reloc.def
+@@ -468,7 +468,7 @@ ARC_RELOC_HOWTO(ARC_TLS_DTPOFF, 67, \
+                 32, \
+                 replace_word32, \
+                 dont, \
+-                ( ME ( S - SECTSTART ) + A ))
++		( ME ( S - FINAL_SECTSTART ) + A ))
+ 
+ ARC_RELOC_HOWTO(ARC_TLS_DTPOFF_S9, 73, \
+                 2, \
+-- 
+2.17.1
+
