@@ -1,0 +1,36 @@
+From 638dab88636db19f2ede0ee652c27deacb28e4e8 Mon Sep 17 00:00:00 2001
+From: Alexey Brodkin <abrodkin@synopsys.com>
+Date: Thu, 17 Oct 2019 17:38:52 +0300
+Subject: [PATCH 2/2] arc: [hsdk] Add UIO node for EV
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+---
+ arch/arc/boot/dts/hsdk.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index d131c54acd3e..93c793fdba49 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -234,4 +234,18 @@
+ 		device_type = "memory";
+ 		reg = <0x80000000 0x40000000>;  /* 1 GiB */
+ 	};
++
++/*
++	 * Embedded Vision subsystem UIO mappings; only relevant for EV VDK
++	 *
++	 * This node is intentionally put outside of MB above becase
++	 * it maps areas outside of MB's 0xez-0xfz.
++	 */
++	uio_ev: uio@0x00000000 {
++		compatible = "generic-uio";
++		reg = <0x40000000 0x2000 0x42000000 0x80000 0x30000000 0x10000000 0x20000000 0x10000000>;
++		reg-names = "arconnect", "csm", "ev_shared_mem", "ev_code_mem";
++		interrupt-parent = <&idu_intc>;
++		interrupts = < 34 1 >;
++}	;
+ };
+-- 
+2.16.2
+
