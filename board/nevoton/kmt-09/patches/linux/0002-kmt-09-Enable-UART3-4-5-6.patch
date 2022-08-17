@@ -1,0 +1,52 @@
+From 80910b477ce84bcbc3e6790afb67c8fd76a27193 Mon Sep 17 00:00:00 2001
+From: Alexey Brodkin <abrodkin@synopsys.com>
+Date: Wed, 17 Aug 2022 15:59:53 +0400
+Subject: [PATCH 2/2] kmt-09: Enable UART3/4/5/6
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+---
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 28 +++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+index 1fa832d7b469..6aae47150b61 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+@@ -224,6 +224,34 @@
+ 	status = "okay";
+ };
+ 
++/* UART3; pins PG6, PG7; ttyS1 */
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins_a>;
++	status = "okay";
++};
++
++/* UART4; pins PG10, PG11; ttyS2 */
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins_a>;
++	status = "okay";
++};
++
++/* UART5; pins PI10, PI11; ttyS3 */
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart5_pins_a>;
++	status = "okay";
++};
++
++/* UART6; pins PI12, PI13; ttyS4 */
++&uart6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart6_pins_a>;
++	status = "okay";
++};
++
+ &usbphy {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb0_id_detect_pin>;
+-- 
+2.25.1
+
